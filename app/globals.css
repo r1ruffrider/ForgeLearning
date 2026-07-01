@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Forge dark professional theme (HSL channels for Tailwind tokens) */
+    --background: 224 52% 5%;
+    --foreground: 210 40% 98%;
+
+    --card: 223 44% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --muted: 223 30% 14%;
+    --muted-foreground: 215 22% 68%;
+
+    --accent: 223 40% 12%;
+    --accent-foreground: 210 40% 98%;
+
+    --border: 216 30% 18%;
+    --input: 216 30% 18%;
+    --ring: 218 90% 60%;
+
+    --primary: 43 96% 56%;
+    --primary-foreground: 224 60% 7%;
+
+    --secondary: 223 40% 12%;
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 0 72% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Brand palette */
+    --forge-navy: 224 60% 7%;
+    --forge-blue: 218 90% 60%;
+    --forge-blue-soft: 213 94% 74%;
+    --forge-gold: 43 96% 56%;
+    --forge-gold-soft: 45 100% 65%;
+    --forge-ember: 25 95% 58%;
+
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Respect users who prefer reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  /* Consistent, visible focus ring for keyboard users. */
+  :focus-visible {
+    @apply outline-none;
+  }
+}
+
+@layer utilities {
+  /* Ambient forge glow used behind hero + CTA. */
+  .forge-glow {
+    background:
+      radial-gradient(
+        60% 50% at 50% 0%,
+        hsl(var(--forge-blue) / 0.18) 0%,
+        transparent 70%
+      ),
+      radial-gradient(
+        40% 40% at 80% 20%,
+        hsl(var(--forge-gold) / 0.1) 0%,
+        transparent 70%
+      );
+  }
+
+  .glass {
+    @apply border border-white/10 bg-white/[0.04] backdrop-blur-md;
+  }
+
+  .text-gradient-gold {
+    @apply bg-gradient-to-br from-forge-gold-soft to-forge-gold bg-clip-text text-transparent;
+  }
+
+  /* Subtle metal-grain texture overlay. */
+  .grain {
+    background-image: radial-gradient(
+      hsl(var(--foreground) / 0.025) 1px,
+      transparent 1px
+    );
+    background-size: 3px 3px;
+  }
+}
