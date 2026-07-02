@@ -14,7 +14,7 @@ export const site = {
     wordmark: "Forge Learning",
     // The cert that launches first — surfaced in hero + thank-you copy.
     firstTrack: "Forge CISSP",
-    contactEmail: "hello@forgelearning.app",
+    contactEmail: "info@forgelearning.app",
     domain: "forgelearning.app",
   },
 
@@ -155,6 +155,95 @@ export const site = {
       { label: "Terms", href: "/terms" },
     ],
     contactLabel: "Contact",
+  },
+
+  /**
+   * Legal pages (/privacy, /terms). Plain-English placeholder copy — edit here,
+   * no need to touch the page components. `{contactEmail}` and `{updated}`
+   * tokens are substituted at render time from brand.contactEmail and the
+   * `updated` date below. Keep it honest: if you add analytics, payments, or
+   * accounts later, update the privacy copy to match.
+   */
+  legal: {
+    // Bump when you change the wording. Rendered as the "Last updated" date.
+    updated: "July 2, 2026",
+
+    privacy: {
+      title: "Privacy Policy",
+      intro:
+        "Forge Learning is not live yet. Right now this site does one thing: it lets you join a waitlist so we can tell you when we launch. This notice explains what we collect and why, in plain English.",
+      sections: [
+        {
+          heading: "What we collect",
+          body: [
+            "When you join the waitlist we store only: your email address, the certification track you optionally select, a short source tag noting where the signup came from, and the timestamp of your signup.",
+            "That's it. There are no accounts, no passwords, no payments, and no analytics or advertising cookies. We don't track your browsing.",
+          ],
+        },
+        {
+          heading: "Why we collect it",
+          body: [
+            "We use your email for one purpose: to notify you when Forge Learning launches — starting with Forge CISSP — and, if you opted into a track, to tell you when that track is available. Expect roughly one email at launch. You can unsubscribe at any time.",
+          ],
+        },
+        {
+          heading: "Where it's stored",
+          body: [
+            "Your signup is stored in a database hosted by Supabase, and this site is hosted by Vercel. Both act as processors on our behalf. We don't send your information anywhere else.",
+          ],
+        },
+        {
+          heading: "We don't sell or share your data",
+          body: [
+            "We do not sell, rent, or share your email or any other information for marketing. Ever.",
+          ],
+        },
+        {
+          heading: "Removing your data",
+          body: [
+            "Want off the list? Email us at {contactEmail} and we'll delete your entry from the waitlist. No hoops.",
+          ],
+        },
+        {
+          heading: "Contact",
+          body: [
+            "Questions about this notice? Reach us at {contactEmail}.",
+          ],
+        },
+      ],
+    },
+
+    terms: {
+      title: "Terms of Use",
+      intro:
+        "These are interim terms for the Forge Learning waitlist landing page. They'll be expanded into full terms of service when the product launches.",
+      sections: [
+        {
+          heading: "As-is",
+          body: [
+            "This site is provided on an \"as-is\" and \"as-available\" basis, without warranties of any kind. We may change, pause, or take it down at any time.",
+          ],
+        },
+        {
+          heading: "The waitlist isn't a purchase",
+          body: [
+            "Joining the waitlist is free and does not create an account, a contract, or a purchase. It is not a guarantee of access, pricing, availability, or a launch date. It simply means we'll email you news about Forge Learning.",
+          ],
+        },
+        {
+          heading: "Changes to these terms",
+          body: [
+            "We'll publish complete terms of service when Forge Learning becomes available. Until then, these interim terms apply to your use of this site.",
+          ],
+        },
+        {
+          heading: "Contact",
+          body: [
+            "Questions? Email us at {contactEmail}.",
+          ],
+        },
+      ],
+    },
   },
 } as const;
 
