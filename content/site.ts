@@ -90,9 +90,6 @@ export const site = {
       { name: "PMP", status: "soon" },
       { name: "ITIL", status: "soon" },
       { name: "Linux+", status: "soon" },
-      { name: "DoD 8140", status: "soon" },
-      { name: "Army Boards", status: "soon" },
-      { name: "Leadership", status: "soon" },
     ] as const,
     labels: {
       first: "Available first",
