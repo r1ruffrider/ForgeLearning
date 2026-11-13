@@ -14,7 +14,7 @@ export const site = {
     wordmark: "Forge Learning",
     // The cert that launches first — surfaced in hero + thank-you copy.
     firstTrack: "Forge CISSP",
-    contactEmail: "info@forgelearning.app",
+    contactEmail: "info@inspirebusinesstechnology.com",
     domain: "forgelearning.app",
   },
 
