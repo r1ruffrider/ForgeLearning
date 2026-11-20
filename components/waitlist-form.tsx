@@ -7,6 +7,7 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { site } from "@/content/site";
 import { isValidEmail } from "@/lib/validation";
 import { cn } from "@/lib/utils";
+import { type WaitlistResult } from "@/lib/waitlist-result";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,15 +29,21 @@ type WaitlistFormProps = {
   className?: string;
   /** Unique id prefix so multiple forms on the page keep valid label/for pairs. */
   idPrefix: string;
+  /** Server-rendered result from a no-JS POST redirect (`?waitlist=`). */
+  initialResult?: WaitlistResult;
+  /** Existing JS-path error string for a no-JS error redirect. */
+  initialError?: string | null;
 };
 
-export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps) {
+export function WaitlistForm({ source, className, idPrefix, initialResult, initialError }: WaitlistFormProps) {
   const reduce = useReducedMotion();
   const [email, setEmail] = React.useState("");
   const [track, setTrack] = React.useState<string>("");
   const [company, setCompany] = React.useState(""); // honeypot
-  const [status, setStatus] = React.useState<Status>("idle");
-  const [error, setError] = React.useState<string | null>(null);
+  const [status, setStatus] = React.useState<Status>(
+    initialResult === "ok" ? "success" : initialError ? "error" : "idle",
+  );
+  const [error, setError] = React.useState<string | null>(initialError ?? null);
 
   const emailId = `${idPrefix}-email`;
   const trackId = `${idPrefix}-track`;
@@ -115,11 +122,14 @@ export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps)
 
   return (
     <form
+      method="post"
+      action="/api/waitlist"
       onSubmit={handleSubmit}
       noValidate
       className={cn("w-full", className)}
       aria-describedby={error ? errorId : undefined}
     >
+      <input type="hidden" name="source" value={source} />
       <div className="flex flex-col gap-4">
         {/* Email */}
         <div className="flex flex-col gap-1.5 text-left">
@@ -166,6 +176,32 @@ export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps)
             </SelectContent>
           </Select>
         </div>
+
+        {/* Native track field for no-JS POSTs (Radix Select does not submit a name). */}
+        <noscript>
+          <div className="flex flex-col gap-1.5 text-left">
+            <label htmlFor={`${idPrefix}-track-nojs`} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 leading-snug">
+              {copy.trackLabel}
+              <span className="font-mono text-xs font-normal text-muted-foreground">
+                ({copy.trackOptional})
+              </span>
+            </label>
+            <select
+              id={`${idPrefix}-track-nojs`}
+              name="track"
+              defaultValue=""
+              className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
+              <option value="">{copy.trackPlaceholder}</option>
+              {site.tracks.items.map((t) => (
+                <option key={t.name} value={t.name}>
+                  {t.name}
+                  {t.status === "first" ? "  ·  Available first" : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+        </noscript>
 
         {/* Honeypot — visually hidden, off-screen, not announced. */}
         <div

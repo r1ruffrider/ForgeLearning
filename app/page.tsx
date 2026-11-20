@@ -8,8 +8,17 @@ import { Faq } from "@/components/sections/faq";
 import { FinalCta } from "@/components/sections/final-cta";
 import { Footer } from "@/components/sections/footer";
 import { JsonLd } from "@/components/json-ld";
+import { parseWaitlistResult, type WaitlistResult } from "@/lib/waitlist-result";
+import { site } from "@/content/site";
+import { TOO_MANY } from "@/lib/waitlist-route";
 
-export default function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ waitlist?: string | string[] }>;
+}) {
+  const waitlistResult = parseWaitlistResult((await searchParams).waitlist);
+  const waitlistError = waitlistErrorMessage(waitlistResult);
   return (
     <>
       {/* Skip link for keyboard users */}
@@ -29,11 +38,20 @@ export default function Home() {
         <Tracks />
         <Platforms />
         <Faq />
-        <FinalCta />
+        <FinalCta waitlistResult={waitlistResult} waitlistError={waitlistError} />
       </main>
 
       <Footer />
       <JsonLd />
     </>
   );
+}
+
+function waitlistErrorMessage(result?: WaitlistResult): string | null {
+  // Reuse the JS-path strings; invent no copy.
+  if (!result || result === "ok") return null;
+  if (result === "required") return site.waitlistForm.errors.emailRequired;
+  if (result === "invalid") return site.waitlistForm.errors.emailInvalid;
+  if (result === "rate") return TOO_MANY.error;
+  return site.waitlistForm.errors.generic;
 }
