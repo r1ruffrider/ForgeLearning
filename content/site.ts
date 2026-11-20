@@ -45,7 +45,7 @@ export const site = {
       "The cross-platform study platform for IT, cybersecurity, and professional certifications — with AI coaching, audio study mode, and real exam simulation.",
     cta: "Join the waitlist",
     waitlistLine:
-      "Be first to know when Forge CISSP goes live. No spam — just launch news.",
+      "Join the waitlist for Forge Learning product news. No spam.",
     // "At a glance" spec panel — every value here is restated from this file.
     panel: {
       label: "Forge CISSP at a glance",
@@ -176,7 +176,7 @@ export const site = {
     subtext:
       "Join the waitlist and get early access when the first track launches.",
     cta: "Join the waitlist",
-    reassurance: "One email at launch. Unsubscribe anytime.",
+    reassurance: "Occasional product news. Email us anytime to be removed.",
   },
 
   waitlistForm: {
@@ -195,7 +195,7 @@ export const site = {
     },
     thankYou: {
       heading: "You're on the list.",
-      body: "We'll email you the moment Forge CISSP goes live — and let you know as more tracks roll out.",
+      body: "We'll send you Forge Learning product news. To be removed, just email us.",
     },
   },
 
