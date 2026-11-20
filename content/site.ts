@@ -154,7 +154,7 @@ export const site = {
 
   footer: {
     tagline: "Forge your certification.",
-    copyright: `© ${new Date().getFullYear()} Forge Learning. All rights reserved.`,
+    copyright: `© ${new Date().getFullYear()} Forge Learning · Inspire\u00A0Business\u00A0Group\u00A0LLC`,
     links: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms", href: "/terms" },
