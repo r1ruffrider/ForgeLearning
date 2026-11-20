@@ -30,7 +30,7 @@ export function Reveal({
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.28, delay, ease: [0.22, 1, 0.36, 1] },
     },
   };
 
@@ -93,7 +93,7 @@ export function RevealItem({
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
     },
   };
 

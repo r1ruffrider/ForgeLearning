@@ -5,7 +5,14 @@ import { site } from "@/content/site";
  * Forge wordmark with a minimal spark/anvil mark. Pure inline SVG — no image
  * request, no layout shift.
  */
-export function Logo({ className }: { className?: string }) {
+export function Logo({
+  className,
+  wordmarkClassName,
+}: {
+  className?: string;
+  /** Lets the header visually hide the wordmark on the narrowest phones. */
+  wordmarkClassName?: string;
+}) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <svg
@@ -31,7 +38,12 @@ export function Logo({ className }: { className?: string }) {
         />
         <circle cx="20.5" cy="6" r="2.5" fill="hsl(var(--forge-gold))" />
       </svg>
-      <span className="text-[17px] font-semibold tracking-tight text-foreground">
+      <span
+        className={cn(
+          "whitespace-nowrap text-[17px] font-semibold tracking-tight text-foreground",
+          wordmarkClassName
+        )}
+      >
         {site.brand.wordmark}
       </span>
     </span>

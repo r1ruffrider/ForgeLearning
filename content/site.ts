@@ -30,6 +30,14 @@ export const site = {
     cta: "Join the waitlist",
   },
 
+  /** Sign-in entry point for the Forge web app (secondary to the waitlist). */
+  app: {
+    url: "https://app.forgelearning.app",
+    loginLabel: "Log in",
+    footerPrompt: "Already have access?",
+    footerLoginLabel: "Log in to the app",
+  },
+
   hero: {
     eyebrow: "FORGE LEARNING",
     tagline: "Forge your certification.",

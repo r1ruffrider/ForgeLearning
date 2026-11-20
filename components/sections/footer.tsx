@@ -11,6 +11,15 @@ export function Footer() {
             <p className="text-sm text-muted-foreground">
               {site.footer.tagline}
             </p>
+            <p className="text-sm text-muted-foreground">
+              {site.app.footerPrompt}{" "}
+              <a
+                href={site.app.url}
+                className="rounded-md font-semibold text-forge-blue-soft underline-offset-4 transition-colors duration-200 ease-out hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                {site.app.footerLoginLabel}
+              </a>
+            </p>
           </div>
 
           <nav

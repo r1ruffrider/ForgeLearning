@@ -93,7 +93,7 @@ const config: Config = {
         "pulse-glow": "pulse-glow 6s ease-in-out infinite",
         // CSS-driven hero entrance — no JS dependency, so LCP text paints
         // immediately and stays visible even if scripts fail.
-        rise: "rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both",
+        rise: "rise 0.28s cubic-bezier(0.22, 1, 0.36, 1) both",
       },
     },
   },

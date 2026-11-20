@@ -34,21 +34,21 @@ export function Hero() {
           <h1
             id="hero-heading"
             className="animate-rise text-balance text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl"
-            style={{ animationDelay: "80ms" }}
+            style={{ animationDelay: "50ms" }}
           >
             {site.hero.tagline}
           </h1>
 
           <p
             className="mt-6 max-w-2xl animate-rise text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl"
-            style={{ animationDelay: "180ms" }}
+            style={{ animationDelay: "100ms" }}
           >
             {site.hero.descriptor}
           </p>
 
           <div
             className="mt-10 flex w-full animate-rise flex-col items-center gap-3"
-            style={{ animationDelay: "280ms" }}
+            style={{ animationDelay: "150ms" }}
           >
             <Button asChild variant="gold" size="lg" className="w-full sm:w-auto">
               <a href="#waitlist">
