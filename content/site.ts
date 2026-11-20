@@ -218,30 +218,31 @@ export const site = {
    */
   legal: {
     // Bump when you change the wording. Rendered as the "Last updated" date.
-    updated: "July 2, 2026",
+    updated: "[DATE OF PUBLICATION]",
 
     privacy: {
       title: "Privacy Policy",
       intro:
-        "Forge Learning is not live yet. Right now this site does one thing: it lets you join a waitlist so we can tell you when we launch. This notice explains what we collect and why, in plain English.",
+        "This notice covers this website, forgelearning.app, where you can join a waitlist for product news about Forge Learning. It explains what we collect when you join and why, in plain English. The Forge Learning web app at https://app.forgelearning.app uses accounts and has its own Privacy Policy; see \"Forge Learning app accounts\" below.",
       sections: [
         {
           heading: "What we collect",
           body: [
-            "When you join the waitlist we store only: your email address, the certification track you optionally select, a short source tag noting where the signup came from, and the timestamp of your signup.",
-            "That's it. There are no accounts, no passwords, no payments, and no analytics or advertising cookies. We don't track your browsing.",
+            "When you join the waitlist we store: your email address, the certification track you optionally select, a short source tag noting where the signup came from, and the timestamp of your signup.",
+            "To apply a rate limit, the waitlist server receives your IP address as Vercel reports it, and the database function uses it to update a rate-limit counter under a hashed visitor key. The waitlist row itself does not store your IP. A hashed visitor key (not your raw IP on the waitlist row) is stored in a counter table and opportunistically deleted after two days. The limits are five attempts per minute per visitor and a global backstop of 1,000 per hour. Vercel, which hosts the sites, may process IP addresses at the infrastructure level. This policy does not claim that production infrastructure logs never record a raw IP.",
+            "This website has no accounts, no passwords, and no payments, and it uses no analytics or advertising cookies. We don't track your browsing on this website. Joining the waitlist does not create a Forge Learning app account.",
           ],
         },
         {
           heading: "Why we collect it",
           body: [
-            "We use your email for one purpose: to notify you when Forge Learning launches — starting with Forge CISSP — and, if you opted into a track, to tell you when that track is available. Expect roughly one email at launch. You can unsubscribe at any time.",
+            "We use your waitlist email to send you product news about Forge Learning — including Forge CISSP and, if you selected a track, news about that track. Joining is not a promise of a launch date, of access, or of a set number of emails. To come off the list, email us at {contactEmail}. This is removal on request by email; it is not a one-click unsubscribe. We will remove you within 10 business days of the email request.",
           ],
         },
         {
           heading: "Where it's stored",
           body: [
-            "Your signup is stored in a database hosted by Supabase, and this site is hosted by Vercel. Both act as processors on our behalf. We don't send your information anywhere else.",
+            "Your waitlist signup is stored in a database hosted by Supabase, and this site is hosted by Vercel. Both act as processors on our behalf. We don't send your waitlist information anywhere else.",
           ],
         },
         {
@@ -253,13 +254,23 @@ export const site = {
         {
           heading: "Removing your data",
           body: [
-            "Want off the list? Email us at {contactEmail} and we'll delete your entry from the waitlist. No hoops.",
+            "Want off the list? Email us at {contactEmail} and we'll delete your entry from the waitlist within 10 business days of your request.",
+            "Your waitlist entry and a Forge Learning app account are separate. Removing your waitlist entry does not delete an app account, and deleting an app account does not remove you from the waitlist.",
+          ],
+        },
+        {
+          heading: "Forge Learning app accounts",
+          body: [
+            "The Forge Learning web app at https://app.forgelearning.app uses accounts. You sign in to the app with an email address and password, or with \"Continue with Google\". This website does not create or manage app accounts.",
+            "Your app account and the data in it are covered by the app's own Privacy Policy at https://app.forgelearning.app/privacy, not by this notice. That policy explains what the app collects, the cookies it uses to keep you signed in, the service providers it uses, and your choices.",
+            "To delete an app account, see https://app.forgelearning.app/account-deletion.",
           ],
         },
         {
           heading: "Contact",
           body: [
             "Questions about this notice? Reach us at {contactEmail}.",
+            "Forge Learning is operated by Inspire Business Group LLC.",
           ],
         },
       ],
@@ -268,7 +279,7 @@ export const site = {
     terms: {
       title: "Terms of Use",
       intro:
-        "These are interim terms for the Forge Learning waitlist landing page. They'll be expanded into full terms of service when the product launches.",
+        "These terms cover this website, forgelearning.app, and its waitlist. The Forge Learning web app at https://app.forgelearning.app has its own terms, which apply to app accounts.",
       sections: [
         {
           heading: "As-is",
@@ -285,7 +296,7 @@ export const site = {
         {
           heading: "Changes to these terms",
           body: [
-            "We'll publish complete terms of service when Forge Learning becomes available. Until then, these interim terms apply to your use of this site.",
+            "We will update the \"Last updated\" date on this page whenever these terms change. For material changes, we will make a reasonable effort to notify you before the change takes effect, with a notice in the app or on the site.",
           ],
         },
         {
