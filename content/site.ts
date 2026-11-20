@@ -174,7 +174,7 @@ export const site = {
   finalCta: {
     heading: "Start forging your edge.",
     subtext:
-      "Join the waitlist and get early access when the first track launches.",
+      "Join the waitlist for news on Forge CISSP and the tracks that follow.",
     cta: "Join the waitlist",
     reassurance: "Occasional product news. Email us anytime to be removed.",
   },
