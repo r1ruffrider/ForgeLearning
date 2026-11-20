@@ -7,6 +7,7 @@ import {
   routeSecret,
 } from "@/lib/waitlist-route";
 import { handleWaitlistRequest } from "@/lib/waitlist-post";
+import { site } from "@/content/site";
 
 // Waitlist inserts must hit the live DB, never a static/edge cache.
 export const dynamic = "force-dynamic";
@@ -93,7 +94,7 @@ export async function POST(req: Request) {
   });
 
   if (result.location) {
-    return NextResponse.redirect(new URL(result.location, req.url), 303);
+    return NextResponse.redirect(new URL(result.location, site.seo.url), 303);
   }
   const response = NextResponse.json(result.body ?? ACCEPTED, { status: result.status });
   if (result.headers) {

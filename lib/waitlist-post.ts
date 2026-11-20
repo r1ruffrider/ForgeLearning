@@ -1,3 +1,4 @@
+import { site } from "@/content/site";
 import {
   ACCEPTED,
   SERVER_ERROR,
@@ -45,12 +46,55 @@ export type WaitlistHttpResult = {
   headers?: Record<string, string>;
 };
 
+const FORBIDDEN = { ok: false } as const;
+const UNSUPPORTED_TYPE = { ok: false } as const;
+
 function isFormRequest(req: Request): boolean {
   const type = req.headers.get("content-type") ?? "";
   return (
     type.includes("application/x-www-form-urlencoded") ||
     type.includes("multipart/form-data")
   );
+}
+
+/** application/json, with an optional charset (or other) parameter. */
+export function isJsonContentType(header: string | null): boolean {
+  if (!header) return false;
+  const media = header.split(";", 1)[0].trim().toLowerCase();
+  return media === "application/json";
+}
+
+function headerOrigin(value: string): string | null {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+    return url.origin;
+  } catch {
+    return null;
+  }
+}
+
+/** Allowed site origin, taken from site.seo.url (not a second hardcoded copy). */
+export function waitlistAllowedOrigin(): string {
+  return new URL(site.seo.url).origin;
+}
+
+/**
+ * Fail closed unless Origin (or Referer origin when Origin is absent) equals
+ * the site origin. No local-dev allowance exists in this codebase; production
+ * and every other environment use the same strict check. No new env var.
+ */
+export function isAllowedRequestOrigin(req: Request): boolean {
+  const allowed = waitlistAllowedOrigin();
+  const originHeader = req.headers.get("origin");
+  if (originHeader !== null && originHeader !== "") {
+    return headerOrigin(originHeader) === allowed;
+  }
+  const referer = req.headers.get("referer");
+  if (referer !== null && referer !== "") {
+    return headerOrigin(referer) === allowed;
+  }
+  return false;
 }
 
 async function readPayload(
@@ -103,8 +147,9 @@ function formResultForInvalid(payload: Record<string, unknown>): WaitlistResult 
 /**
  * Shared JSON + urlencoded POST handler. GET never signs up.
  * Rate limit, honeypot, validateSignup, coerceSource, and join_waitlist
- * are the same protections as the JS path (the JS path has no origin or
- * consent check to mirror).
+ * are the same protections as the JS path. Every POST also fails closed
+ * unless Origin (or Referer when Origin is absent) matches site.seo.url.
+ * The JSON branch requires Content-Type application/json before req.json().
  */
 export async function handleWaitlistRequest(
   req: Request,
@@ -112,6 +157,14 @@ export async function handleWaitlistRequest(
 ): Promise<WaitlistHttpResult> {
   if (req.method !== "POST") {
     return { status: 405, headers: { Allow: "POST" }, body: { ok: false } };
+  }
+
+  if (!isAllowedRequestOrigin(req)) {
+    return { status: 403, body: FORBIDDEN };
+  }
+
+  if (!isFormRequest(req) && !isJsonContentType(req.headers.get("content-type"))) {
+    return { status: 415, body: UNSUPPORTED_TYPE };
   }
 
   const ip = clientIp(req.headers);

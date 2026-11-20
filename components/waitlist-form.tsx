@@ -7,7 +7,6 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { site } from "@/content/site";
 import { isValidEmail } from "@/lib/validation";
 import { cn } from "@/lib/utils";
-import { type WaitlistResult } from "@/lib/waitlist-result";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,21 +28,20 @@ type WaitlistFormProps = {
   className?: string;
   /** Unique id prefix so multiple forms on the page keep valid label/for pairs. */
   idPrefix: string;
-  /** Server-rendered result from a no-JS POST redirect (`?waitlist=`). */
-  initialResult?: WaitlistResult;
-  /** Existing JS-path error string for a no-JS error redirect. */
-  initialError?: string | null;
 };
 
-export function WaitlistForm({ source, className, idPrefix, initialResult, initialError }: WaitlistFormProps) {
+export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps) {
   const reduce = useReducedMotion();
   const [email, setEmail] = React.useState("");
   const [track, setTrack] = React.useState<string>("");
   const [company, setCompany] = React.useState(""); // honeypot
-  const [status, setStatus] = React.useState<Status>(
-    initialResult === "ok" ? "success" : initialError ? "error" : "idle",
-  );
-  const [error, setError] = React.useState<string | null>(initialError ?? null);
+  const [status, setStatus] = React.useState<Status>("idle");
+  const [error, setError] = React.useState<string | null>(null);
+  const [hydrated, setHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   const emailId = `${idPrefix}-email`;
   const trackId = `${idPrefix}-track`;
@@ -129,6 +127,9 @@ export function WaitlistForm({ source, className, idPrefix, initialResult, initi
       className={cn("w-full", className)}
       aria-describedby={error ? errorId : undefined}
     >
+      <noscript>
+        <style>{`.waitlist-js-track{display:none!important}`}</style>
+      </noscript>
       <input type="hidden" name="source" value={source} />
       <div className="flex flex-col gap-4">
         {/* Email */}
@@ -154,7 +155,10 @@ export function WaitlistForm({ source, className, idPrefix, initialResult, initi
           />
         </div>
 
-        {/* Optional track */}
+        {/* Optional track: native select is in the DOM so no-JS and pre-hydration
+            POSTs keep the chosen track. The Radix trigger is hidden until hydrated
+            (and also hidden by a noscript style when JS is off), so only one field
+            is visible at a time. */}
         <div className="flex flex-col gap-1.5 text-left">
           <Label htmlFor={trackId} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 leading-snug">
             {copy.trackLabel}
@@ -162,46 +166,40 @@ export function WaitlistForm({ source, className, idPrefix, initialResult, initi
               ({copy.trackOptional})
             </span>
           </Label>
-          <Select value={track} onValueChange={setTrack}>
-            <SelectTrigger id={trackId} aria-label={copy.trackLabel}>
-              <SelectValue placeholder={copy.trackPlaceholder} />
-            </SelectTrigger>
-            <SelectContent>
-              {site.tracks.items.map((t) => (
-                <SelectItem key={t.name} value={t.name}>
-                  {t.name}
-                  {t.status === "first" ? "  ·  Available first" : ""}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Native track field for no-JS POSTs (Radix Select does not submit a name). */}
-        <noscript>
-          <div className="flex flex-col gap-1.5 text-left">
-            <label htmlFor={`${idPrefix}-track-nojs`} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 leading-snug">
-              {copy.trackLabel}
-              <span className="font-mono text-xs font-normal text-muted-foreground">
-                ({copy.trackOptional})
-              </span>
-            </label>
-            <select
-              id={`${idPrefix}-track-nojs`}
-              name="track"
-              defaultValue=""
-              className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              <option value="">{copy.trackPlaceholder}</option>
-              {site.tracks.items.map((t) => (
-                <option key={t.name} value={t.name}>
-                  {t.name}
-                  {t.status === "first" ? "  ·  Available first" : ""}
-                </option>
-              ))}
-            </select>
+          <div className="waitlist-js-track" hidden={!hydrated} aria-hidden={!hydrated}>
+            <Select value={track} onValueChange={setTrack}>
+              <SelectTrigger id={hydrated ? trackId : `${idPrefix}-track-js`} aria-label={copy.trackLabel}>
+                <SelectValue placeholder={copy.trackPlaceholder} />
+              </SelectTrigger>
+              <SelectContent>
+                {site.tracks.items.map((t) => (
+                  <SelectItem key={t.name} value={t.name}>
+                    {t.name}
+                    {t.status === "first" ? "  ·  Available first" : ""}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </noscript>
+          <select
+            id={hydrated ? `${idPrefix}-track-native` : trackId}
+            name="track"
+            value={track}
+            onChange={(e) => setTrack(e.target.value)}
+            hidden={hydrated}
+            aria-hidden={hydrated}
+            tabIndex={hydrated ? -1 : undefined}
+            className="flex h-12 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2 text-base text-foreground shadow-sm transition-[color,background-color,border-color,box-shadow] duration-200 ease-out"
+          >
+            <option value="">{copy.trackPlaceholder}</option>
+            {site.tracks.items.map((t) => (
+              <option key={t.name} value={t.name}>
+                {t.name}
+                {t.status === "first" ? "  ·  Available first" : ""}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Honeypot — visually hidden, off-screen, not announced. */}
         <div

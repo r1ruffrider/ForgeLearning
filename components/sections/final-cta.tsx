@@ -1,9 +1,8 @@
 import { site } from "@/content/site";
 import { WaitlistForm } from "@/components/waitlist-form";
-import { type WaitlistResult } from "@/lib/waitlist-result";
 
 /** Final CTA on the gold brand band; the form sits in a dark panel on it. */
-export function FinalCta({ waitlistResult, waitlistError }: { waitlistResult?: WaitlistResult; waitlistError?: string | null }) {
+export function FinalCta() {
   return (
     <section
       id="waitlist"
@@ -28,7 +27,7 @@ export function FinalCta({ waitlistResult, waitlistError }: { waitlistResult?: W
           </div>
 
           <div className="dark-panel rounded-[20px] bg-background p-5 text-foreground shadow-[0_24px_60px_-24px_hsl(var(--forge-navy)/0.7)] sm:p-8">
-            <WaitlistForm source="final-cta" idPrefix="final" initialResult={waitlistResult} initialError={waitlistError} />
+            <WaitlistForm source="final-cta" idPrefix="final" />
           </div>
         </div>
       </div>

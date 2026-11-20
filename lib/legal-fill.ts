@@ -29,7 +29,7 @@ export function fillLegalText(
       parts.push({ type: "text", value: filled.slice(last, match.index) });
     }
     const parsed = parseAllowedAppUrl(candidate);
-    if (parsed) {
+    if (parsed && visibleMatchesHref(candidate, parsed.href)) {
       parts.push({ type: "link", href: parsed.href, value: candidate });
       if (trailing) parts.push({ type: "text", value: trailing });
     } else {
@@ -55,6 +55,15 @@ function stripTrailingPunct(raw: string): {
     end -= 1;
   }
   return { candidate: raw.slice(0, end), trailing: raw.slice(end) };
+}
+
+function stripTrailingSlash(value: string): string {
+  return value.endsWith("/") ? value.slice(0, -1) : value;
+}
+
+/** Link only when the visible text equals the normalized href (trailing slash ignored). */
+function visibleMatchesHref(visible: string, href: string): boolean {
+  return stripTrailingSlash(visible) === stripTrailingSlash(href);
 }
 
 function parseAllowedAppUrl(candidate: string): URL | null {

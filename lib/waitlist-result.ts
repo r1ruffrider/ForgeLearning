@@ -12,9 +12,9 @@ export const WAITLIST_RESULTS = [
 
 export type WaitlistResult = (typeof WAITLIST_RESULTS)[number];
 
-/** Status-only redirect; never includes the submitted email or any user input. */
+/** Status-only path for the static result pages; never includes user input. */
 export function waitlistRedirectPath(result: WaitlistResult): string {
-  return `/?waitlist=${result}#waitlist`;
+  return `/waitlist/${result}`;
 }
 
 export function parseWaitlistResult(value: unknown): WaitlistResult | undefined {
