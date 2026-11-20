@@ -300,9 +300,16 @@ export const site = {
           ],
         },
         {
+          heading: "Governing law and venue",
+          body: [
+            "These terms are governed by the law of the State of Georgia, USA. Venue is the state and federal courts in Fulton County, Georgia.",
+          ],
+        },
+        {
           heading: "Contact",
           body: [
             "Questions? Email us at {contactEmail}.",
+            "Public contact: Inspire Business Group LLC, the operator of Forge Learning, at {contactEmail}.",
           ],
         },
       ],
