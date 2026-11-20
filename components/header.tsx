@@ -28,7 +28,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <a
           href="#top"
-          className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="inline-flex min-h-11 items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           aria-label={`${site.brand.name} — home`}
         >
           <Logo wordmarkClassName="max-[439px]:sr-only" />

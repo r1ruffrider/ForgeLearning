@@ -1,12 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Archivo, JetBrains_Mono } from "next/font/google";
 import { site } from "@/content/site";
 import "./globals.css";
 
-const inter = Inter({
+// Archivo: industrial grotesque for the whole site (see _brand/DESIGN.md).
+const archivo = Archivo({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
+});
+
+// JetBrains Mono: labels, badges, step numbers — spec-sheet feel.
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["500"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -14,6 +23,10 @@ export const metadata: Metadata = {
   title: site.seo.title,
   description: site.seo.description,
   applicationName: site.brand.name,
+  alternates: {
+    canonical: "/",
+    types: { "text/markdown": "/index.md" },
+  },
   openGraph: {
     title: site.seo.title,
     description: site.seo.description,
@@ -39,12 +52,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <head>
-        <noscript>
-          <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important}`}</style>
-        </noscript>
-      </head>
+    <html lang="en" className={`${archivo.variable} ${mono.variable}`}>
       <body className="min-h-screen bg-background font-sans">{children}</body>
     </html>
   );

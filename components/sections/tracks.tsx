@@ -1,61 +1,54 @@
 import { site } from "@/content/site";
-import { cn } from "@/lib/utils";
-import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 
+const first = site.tracks.items.find((t) => t.status === "first");
+const rest = site.tracks.items.filter((t) => t.status !== "first");
+
+/** Track list as a spec sheet: CISSP leads, the rest as a hairline list. */
 export function Tracks() {
   return (
     <section
       id="tracks"
-      className="relative py-20 lg:py-28"
+      className="relative border-b border-white/10 py-16 lg:py-24"
       aria-labelledby="tracks-heading"
     >
-      <div className="container">
-        <Reveal className="mx-auto max-w-2xl text-center">
+      <div className="container grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div>
           <h2
             id="tracks-heading"
-            className="text-3xl font-bold tracking-tight sm:text-4xl"
+            className="text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl"
           >
             {site.tracks.heading}
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="mt-4 max-w-md text-lg leading-relaxed text-muted-foreground">
             {site.tracks.subheading}
           </p>
-        </Reveal>
+        </div>
 
-        <RevealGroup
-          className="mx-auto mt-12 flex max-w-4xl flex-wrap items-center justify-center gap-3"
-          stagger={0.04}
-        >
-          {site.tracks.items.map((track) => {
-            const isFirst = track.status === "first";
-            return (
-              <RevealItem key={track.name}>
-                <span
-                  className={cn(
-                    "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium",
-                    isFirst
-                      ? "border-forge-gold/50 bg-forge-gold/10 text-forge-gold-soft"
-                      : "border-white/10 bg-white/[0.04] text-foreground/80"
-                  )}
-                >
-                  {track.name}
-                  <span
-                    className={cn(
-                      "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
-                      isFirst
-                        ? "bg-forge-gold/20 text-forge-gold-soft"
-                        : "bg-white/5 text-muted-foreground"
-                    )}
-                  >
-                    {isFirst
-                      ? site.tracks.labels.first
-                      : site.tracks.labels.soon}
-                  </span>
+        <div>
+          {first && (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-forge-gold/50 bg-forge-gold/[0.08] px-5 py-5 sm:px-6">
+              <p className="text-3xl font-extrabold tracking-[-0.03em] text-forge-gold-soft sm:text-4xl">
+                {first.name}
+              </p>
+              <span className="rounded-full bg-forge-gold px-3 py-1 font-mono text-xs font-medium uppercase tracking-[0.1em] text-forge-navy">
+                {site.tracks.labels.first}
+              </span>
+            </div>
+          )}
+          <ul className="mt-4 grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3">
+            {rest.map((t) => (
+              <li
+                key={t.name}
+                className="flex items-baseline justify-between gap-3 border-b border-white/10 px-1 py-3.5 min-[420px]:pr-5"
+              >
+                <span className="text-base font-semibold">{t.name}</span>
+                <span className="font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
+                  {site.tracks.labels.soon}
                 </span>
-              </RevealItem>
-            );
-          })}
-        </RevealGroup>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

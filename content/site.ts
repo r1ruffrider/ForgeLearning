@@ -21,7 +21,7 @@ export const site = {
   seo: {
     title: "Forge Learning — Forge your certification",
     description:
-      "The cross-platform study platform for IT, cybersecurity, and professional certifications — with AI coaching, audio study mode, and real exam simulation. Join the waitlist.",
+      "Study platform for IT, cybersecurity and professional certifications: AI coaching, audio study mode and real exam simulation. CISSP first.",
     // Used for OpenGraph / canonical. Update when the domain is final.
     url: "https://forgelearning.app",
   },
@@ -39,41 +39,55 @@ export const site = {
   },
 
   hero: {
-    eyebrow: "FORGE LEARNING",
+    eyebrow: "Forge CISSP · Available first",
     tagline: "Forge your certification.",
     descriptor:
       "The cross-platform study platform for IT, cybersecurity, and professional certifications — with AI coaching, audio study mode, and real exam simulation.",
     cta: "Join the waitlist",
     waitlistLine:
       "Be first to know when Forge CISSP goes live. No spam — just launch news.",
+    // "At a glance" spec panel — every value here is restated from this file.
+    panel: {
+      label: "Forge CISSP at a glance",
+      status: "Available first",
+      modesLabel: "Study modes",
+      platformsLabel: "Platforms",
+      nextLabel: "Next tracks",
+    },
   },
 
   features: {
     heading: "What you get",
+    // Short verbs for the drawn study flow (one per feature, same order).
+    flowLabel: "How a study session flows",
     subheading:
       "Everything built around one goal: walking into the exam ready.",
     items: [
       {
         icon: "brain",
         title: "AI Coach",
+        step: "Understand",
         tagline: "Understand the why.",
         body: "Get plain-English breakdowns of every answer — right and wrong — plus the mindset the exam is really testing.",
       },
       {
         icon: "headphones",
         title: "Audio Study Mode",
+        step: "Listen",
         tagline: "Study hands-free.",
         body: "Listen to questions and options on your commute. Tap play, learn anywhere.",
       },
       {
         icon: "timer",
         title: "Exam Simulation",
+        step: "Practice",
         tagline: "Train like it's test day.",
         body: "Timed and adaptive practice exams that mirror real conditions, so nothing surprises you.",
       },
       {
         icon: "chart",
         title: "Readiness Analytics",
+        step: "Track",
         tagline: "Know when you're ready.",
         body: "Track performance by domain and watch your predicted pass probability climb.",
       },
@@ -124,6 +138,39 @@ export const site = {
     liveLabel: "Available",
   },
 
+  midCta: {
+    // Echoes features.subheading ("walking into the exam ready").
+    line: "Walk into the exam ready.",
+    cta: "Join the waitlist",
+  },
+
+  /**
+   * FAQ — assembled ONLY from statements already published on this site
+   * (hero, tracks, platforms, final CTA, /privacy, /terms). Don't add claims here
+   * that aren't on the page or in the legal copy. Also feeds FAQPage JSON-LD.
+   */
+  faq: {
+    heading: "Questions",
+    items: [
+      {
+        q: "Which certification launches first?",
+        a: "Forge CISSP. More tracks roll out after launch: Security+, CASP+, CCSP, CySA+, PenTest+, AWS, Azure, PMP, ITIL and Linux+.",
+      },
+      {
+        q: "Where can I study?",
+        a: "Start on your laptop, keep going on your phone. Web is available; iOS and Android are coming soon.",
+      },
+      {
+        q: "Is joining the waitlist a purchase?",
+        a: "No. Joining the waitlist is free and does not create an account, a contract, or a purchase. It is not a guarantee of access, pricing, availability, or a launch date.",
+      },
+      {
+        q: "How do I get off the list?",
+        a: "Email us at {contactEmail} and we'll delete your entry from the waitlist within 10 business days of your request.",
+      },
+    ],
+  },
+
   finalCta: {
     heading: "Start forging your edge.",
     subtext:
@@ -154,7 +201,7 @@ export const site = {
 
   footer: {
     tagline: "Forge your certification.",
-    copyright: `© ${new Date().getFullYear()} Forge Learning · Inspire\u00A0Business\u00A0Group\u00A0LLC`,
+    copyright: `© ${new Date().getFullYear()} Forge Learning · Inspire\u00A0Business\u00A0Group\u00A0LLC. All rights reserved.`,
     links: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms", href: "/terms" },

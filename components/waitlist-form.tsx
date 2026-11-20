@@ -146,9 +146,9 @@ export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps)
 
         {/* Optional track */}
         <div className="flex flex-col gap-1.5 text-left">
-          <Label htmlFor={trackId} className="flex items-center gap-2">
+          <Label htmlFor={trackId} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 leading-snug">
             {copy.trackLabel}
-            <span className="text-xs font-normal text-muted-foreground">
+            <span className="font-mono text-xs font-normal text-muted-foreground">
               ({copy.trackOptional})
             </span>
           </Label>

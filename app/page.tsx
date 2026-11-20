@@ -1,10 +1,13 @@
 import { Header } from "@/components/header";
 import { Hero } from "@/components/sections/hero";
 import { Features } from "@/components/sections/features";
+import { MidCta } from "@/components/sections/mid-cta";
 import { Tracks } from "@/components/sections/tracks";
 import { Platforms } from "@/components/sections/platforms";
+import { Faq } from "@/components/sections/faq";
 import { FinalCta } from "@/components/sections/final-cta";
 import { Footer } from "@/components/sections/footer";
+import { JsonLd } from "@/components/json-ld";
 
 export default function Home() {
   return (
@@ -22,12 +25,15 @@ export default function Home() {
       <main id="main">
         <Hero />
         <Features />
+        <MidCta />
         <Tracks />
         <Platforms />
+        <Faq />
         <FinalCta />
       </main>
 
       <Footer />
+      <JsonLd />
     </>
   );
 }
