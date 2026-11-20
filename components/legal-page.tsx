@@ -64,7 +64,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         <div className="container flex h-16 items-center">
           <Link
             href="/"
-            className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex min-h-11 items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             aria-label={`${site.brand.name} — home`}
           >
             <Logo />
@@ -109,7 +109,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
           <div className="mt-14 border-t border-white/10 pt-8">
             <Link
               href="/"
-              className="text-sm font-medium text-forge-blue-soft underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex min-h-11 items-center text-sm font-medium text-forge-blue-soft underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               ← Back to Forge Learning
             </Link>

@@ -54,7 +54,7 @@ export function Platforms() {
                 {platform.live && (
                   <a
                     href={site.app.url}
-                    className="-mx-1 inline-flex min-h-11 items-center gap-1 self-start rounded-md px-1 text-[15px] font-semibold text-forge-blue-soft underline-offset-4 transition-[color,transform] duration-200 ease-out hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue active:scale-[0.97] motion-reduce:active:scale-100"
+                    className="-mx-1 inline-flex min-h-11 items-center gap-1 self-start rounded-md px-1 text-[15px] font-semibold text-forge-blue-soft underline-offset-4 transition-[color,transform] duration-200 ease-out hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97] motion-reduce:active:scale-100"
                   >
                     {site.app.loginLabel}
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

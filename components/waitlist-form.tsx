@@ -96,7 +96,7 @@ export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps)
         aria-live="polite"
         initial={reduce ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.24, ease: "easeOut" }}
         className={cn(
           "glass flex flex-col items-center gap-3 rounded-2xl p-8 text-center",
           className
