@@ -218,7 +218,7 @@ export const site = {
    */
   legal: {
     // Bump when you change the wording. Rendered as the "Last updated" date.
-    updated: "[DATE OF PUBLICATION]",
+    updated: "21 November 2026",
 
     privacy: {
       title: "Privacy Policy",
