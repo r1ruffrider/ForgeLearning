@@ -1,6 +1,7 @@
 /**
- * Shared legal-copy fill: substitute {contactEmail}, then split http(s) URLs
- * out as link parts so the legal page can render real <a> nodes (never HTML).
+ * Shared legal-copy fill: substitute {contactEmail}, then turn allowlisted
+ * https://app.forgelearning.app URLs into link parts so the legal page can
+ * render real <a> nodes (never HTML). Anything else stays plain text.
  */
 
 export type LegalTextPart =
@@ -9,7 +10,8 @@ export type LegalTextPart =
 
 const CONTACT_TOKEN = /\{contactEmail\}/g;
 const HTTP_URL = /https?:\/\/[^\s<>]+/gi;
-const TRAILING_PUNCT = /[.,;:)]+$/;
+const TRAILING_PUNCT = new Set([".", ",", ";", ":", ")", '"', "'", "!", "]"]);
+const ALLOWED_HOST = "app.forgelearning.app";
 
 export function fillLegalText(
   text: string,
@@ -22,13 +24,13 @@ export function fillLegalText(
   let match: RegExpExecArray | null;
   while ((match = re.exec(filled)) !== null) {
     const raw = match[0];
-    const href = raw.replace(TRAILING_PUNCT, "");
+    const { candidate, trailing } = stripTrailingPunct(raw);
     if (match.index > last) {
       parts.push({ type: "text", value: filled.slice(last, match.index) });
     }
-    if (isHttpUrl(href)) {
-      parts.push({ type: "link", href, value: href });
-      const trailing = raw.slice(href.length);
+    const parsed = parseAllowedAppUrl(candidate);
+    if (parsed) {
+      parts.push({ type: "link", href: parsed.href, value: candidate });
       if (trailing) parts.push({ type: "text", value: trailing });
     } else {
       parts.push({ type: "text", value: raw });
@@ -44,12 +46,32 @@ export function fillLegalText(
   return mergeAdjacentText(parts);
 }
 
-function isHttpUrl(value: string): boolean {
+function stripTrailingPunct(raw: string): {
+  candidate: string;
+  trailing: string;
+} {
+  let end = raw.length;
+  while (end > 0 && TRAILING_PUNCT.has(raw[end - 1]!)) {
+    end -= 1;
+  }
+  return { candidate: raw.slice(0, end), trailing: raw.slice(end) };
+}
+
+function parseAllowedAppUrl(candidate: string): URL | null {
   try {
-    const protocol = new URL(value).protocol;
-    return protocol === "https:" || protocol === "http:";
+    const url = new URL(candidate);
+    if (
+      url.protocol === "https:" &&
+      url.hostname === ALLOWED_HOST &&
+      url.username === "" &&
+      url.password === "" &&
+      url.port === ""
+    ) {
+      return url;
+    }
+    return null;
   } catch {
-    return false;
+    return null;
   }
 }
 
