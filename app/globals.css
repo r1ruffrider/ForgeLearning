@@ -12,7 +12,7 @@
     --card-foreground: 210 40% 98%;
 
     --muted: 223 30% 14%;
-    --muted-foreground: 215 22% 68%;
+    --muted-foreground: 215 22% 72%;
 
     --accent: 223 40% 12%;
     --accent-foreground: 210 40% 98%;
@@ -37,6 +37,8 @@
     --forge-gold: 43 96% 56%;
     --forge-gold-soft: 45 100% 65%;
     --forge-ember: 25 95% 58%;
+    --forge-raised: 224 45% 8%;
+    --forge-gold-ink: 32 60% 18%;
 
     --radius: 0.75rem;
   }
@@ -71,6 +73,12 @@
     }
   }
 
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
   /* Consistent, visible focus ring for keyboard users. */
   :focus-visible {
     @apply outline-none;
@@ -91,6 +99,15 @@
         hsl(var(--forge-gold) / 0.1) 0%,
         transparent 70%
       );
+  }
+
+  /* Hairline blueprint grid behind the hero, fading out (no glow orbs). */
+  .hero-grid {
+    background-image:
+      linear-gradient(hsl(var(--foreground) / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--foreground) / 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(120% 80% at 70% 0%, #000 30%, transparent 75%);
   }
 
   .glass {

@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: "1.5rem",
+      padding: "1rem",
       screens: {
         "2xl": "1200px",
       },
@@ -30,6 +30,8 @@ const config: Config = {
           gold: "hsl(var(--forge-gold))",
           "gold-soft": "hsl(var(--forge-gold-soft))",
           ember: "hsl(var(--forge-ember))",
+          raised: "hsl(var(--forge-raised))",
+          "gold-ink": "hsl(var(--forge-gold-ink))",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -63,6 +65,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       keyframes: {
         "accordion-down": {
@@ -86,6 +89,10 @@ const config: Config = {
           from: { opacity: "0", transform: "translateY(18px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        enter: {
+          from: { opacity: "0", transform: "scale(0.95)" },
+          to: { opacity: "1", transform: "scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -93,7 +100,9 @@ const config: Config = {
         "pulse-glow": "pulse-glow 6s ease-in-out infinite",
         // CSS-driven hero entrance — no JS dependency, so LCP text paints
         // immediately and stays visible even if scripts fail.
-        rise: "rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both",
+        rise: "rise 0.28s cubic-bezier(0.22, 1, 0.36, 1) both",
+        // Hero panel entrance: scale(0.95) + opacity, ease-out, < 300ms.
+        enter: "enter 0.24s cubic-bezier(0.22, 1, 0.36, 1) both",
       },
     },
   },

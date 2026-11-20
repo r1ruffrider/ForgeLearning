@@ -1,39 +1,34 @@
 import { site } from "@/content/site";
-import { Reveal } from "@/components/motion/reveal";
 import { WaitlistForm } from "@/components/waitlist-form";
 
+/** Final CTA on the gold brand band; the form sits in a dark panel on it. */
 export function FinalCta() {
   return (
     <section
       id="waitlist"
-      className="relative scroll-mt-20 py-20 lg:py-28"
+      className="relative scroll-mt-16 bg-forge-gold py-16 text-forge-navy lg:py-24"
       aria-labelledby="final-cta-heading"
     >
-      {/* focused glow to draw the eye to the form */}
-      <div className="forge-glow absolute inset-0 -z-10 opacity-80" aria-hidden="true" />
-
       <div className="container">
-        <div className="mx-auto grid max-w-5xl items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <Reveal className="text-center lg:text-left">
+        <div className="grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,28rem)] lg:gap-16">
+          <div>
             <h2
               id="final-cta-heading"
-              className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
+              className="text-4xl font-extrabold leading-[1.02] tracking-[-0.035em] sm:text-5xl lg:text-6xl"
             >
               {site.finalCta.heading}
             </h2>
-            <p className="mt-5 text-lg text-muted-foreground">
+            <p className="mt-5 max-w-lg text-lg leading-relaxed text-forge-gold-ink">
               {site.finalCta.subtext}
             </p>
-            <p className="mt-4 text-sm text-muted-foreground/80">
+            <p className="mt-4 font-mono text-xs uppercase tracking-[0.12em] text-forge-gold-ink">
               {site.finalCta.reassurance}
             </p>
-          </Reveal>
+          </div>
 
-          <Reveal delay={0.1}>
-            <div className="glass rounded-2xl p-6 sm:p-8">
-              <WaitlistForm source="final-cta" idPrefix="final" />
-            </div>
-          </Reveal>
+          <div className="dark-panel rounded-[20px] bg-background p-5 text-foreground shadow-[0_24px_60px_-24px_hsl(var(--forge-navy)/0.7)] sm:p-8">
+            <WaitlistForm source="final-cta" idPrefix="final" />
+          </div>
         </div>
       </div>
     </section>

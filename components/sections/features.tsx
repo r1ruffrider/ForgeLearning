@@ -1,7 +1,6 @@
-import { Brain, Headphones, Timer, LineChart, type LucideIcon } from "lucide-react";
+import { Brain, Headphones, LineChart, Timer, type LucideIcon } from "lucide-react";
 
 import { site } from "@/content/site";
-import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 
 const ICONS: Record<string, LucideIcon> = {
   brain: Brain,
@@ -10,52 +9,65 @@ const ICONS: Record<string, LucideIcon> = {
   chart: LineChart,
 };
 
+// Drawn as one study flow: practice → understand → listen → track.
+const ORDER = ["timer", "brain", "headphones", "chart"];
+const steps = ORDER.map((icon) => site.features.items.find((f) => f.icon === icon)!).filter(Boolean);
+
+/**
+ * "What you get" — the four features drawn as a connected flow on a rail
+ * (vertical on phones, horizontal from lg), separated by hairlines rather than
+ * boxed into identical cards.
+ */
 export function Features() {
   return (
     <section
       id="features"
-      className="relative py-20 lg:py-28"
+      className="relative border-b border-white/10 bg-forge-raised py-16 lg:py-24"
       aria-labelledby="features-heading"
     >
       <div className="container">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <h2
-            id="features-heading"
-            className="text-3xl font-bold tracking-tight sm:text-4xl"
-          >
-            {site.features.heading}
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-forge-gold-soft">
+              {site.features.flowLabel}
+            </p>
+            <h2
+              id="features-heading"
+              className="mt-3 text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl lg:text-5xl"
+            >
+              {site.features.heading}
+            </h2>
+          </div>
+          <p className="max-w-xl text-lg leading-relaxed text-muted-foreground lg:justify-self-end">
             {site.features.subheading}
           </p>
-        </Reveal>
+        </div>
 
-        <RevealGroup className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {site.features.items.map((feature) => {
-            const Icon = ICONS[feature.icon] ?? Brain;
+        <ol className="relative mt-12 grid gap-0 lg:mt-16 lg:grid-cols-4">
+          {/* rail */}
+          <span
+            aria-hidden="true"
+            className="absolute bottom-6 left-[23px] top-6 w-px bg-forge-gold/40 lg:bottom-auto lg:left-6 lg:right-6 lg:top-[23px] lg:h-px lg:w-auto"
+          />
+          {steps.map((f, i) => {
+            const Icon = ICONS[f.icon] ?? Brain;
             return (
-              <RevealItem key={feature.title}>
-                <article className="glass group h-full rounded-2xl p-6 transition-colors duration-300 hover:border-forge-blue/30 hover:bg-white/[0.06]">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-forge-blue/15 ring-1 ring-forge-blue/25 transition-colors group-hover:bg-forge-blue/25">
-                    <Icon
-                      className="h-6 w-6 text-forge-blue-soft"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <h3 className="mt-5 text-lg font-semibold tracking-tight">
-                    {feature.title}
-                  </h3>
-                  <p className="mt-1 text-sm font-medium text-forge-gold-soft">
-                    {feature.tagline}
+              <li key={f.title} className="relative flex gap-5 pb-10 last:pb-0 lg:flex-col lg:gap-6 lg:pb-0 lg:pr-8">
+                <span className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-background text-forge-blue-soft">
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <div>
+                  <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                    {String(i + 1).padStart(2, "0")} · {f.step}
                   </p>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {feature.body}
-                  </p>
-                </article>
-              </RevealItem>
+                  <h3 className="mt-2 text-xl font-bold tracking-[-0.02em]">{f.title}</h3>
+                  <p className="mt-1 text-base font-semibold text-forge-gold-soft">{f.tagline}</p>
+                  <p className="mt-2 max-w-sm text-base leading-relaxed text-muted-foreground">{f.body}</p>
+                </div>
+              </li>
             );
           })}
-        </RevealGroup>
+        </ol>
       </div>
     </section>
   );

@@ -3,14 +3,11 @@ import { validateSignup } from "@/lib/validation";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
 import {
   ACCEPTED,
-  SERVER_ERROR,
-  TOO_MANY,
   clientIp,
-  coerceSource,
-  limiterKey,
   routeSecret,
-  rpcErrorOutcome,
 } from "@/lib/waitlist-route";
+import { handleWaitlistRequest } from "@/lib/waitlist-post";
+import { site } from "@/content/site";
 
 // Waitlist inserts must hit the live DB, never a static/edge cache.
 export const dynamic = "force-dynamic";
@@ -64,75 +61,51 @@ export async function POST(req: Request) {
   sweep();
 
   const ip = clientIp(req.headers);
-  if (rateLimited(limiterKey(ip))) {
-    return NextResponse.json(TOO_MANY, { status: 429 });
-  }
-
-  let payload: Record<string, unknown>;
-  try {
-    payload = await req.json();
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: "Invalid request." },
-      { status: 400 }
-    );
-  }
-
-  // Honeypot: real users never fill a hidden field. Pretend success so bots
-  // don't learn they were caught.
-  if (typeof payload.company === "string" && payload.company.trim() !== "") {
-    return NextResponse.json(ACCEPTED);
-  }
-
-  const result = validateSignup(payload);
-  if (!result.ok) {
-    return NextResponse.json(
-      { ok: false, error: result.error },
-      { status: 400 }
-    );
-  }
-
-  const { email, track } = result.data;
-  const source = coerceSource(result.data.source);
-
-  // Local-only fallback: no Supabase configured → log and succeed so the page
-  // works end-to-end in development.
-  if (!isSupabaseConfigured) {
-    // Never a full address in logs: the domain only.
-    const domain = email.slice(email.lastIndexOf("@") + 1);
-    console.info("[waitlist] (local-only) signup:", { domain, track, source });
-    return NextResponse.json({ ...ACCEPTED, mode: "local" });
-  }
-
-  const secret = routeSecret(process.env);
-  if (!secret) {
-    // Fail closed: without the secret the database refuses every call anyway.
-    console.error("[waitlist] WAITLIST_ROUTE_SECRET is not set");
-    return NextResponse.json(SERVER_ERROR, { status: 500 });
-  }
-
-  const supabase = getSupabase();
-  if (!supabase) {
-    return NextResponse.json(SERVER_ERROR, { status: 500 });
-  }
-
-  // The only write path (forge-app migrations 0025/0026). It returns nothing
-  // either way, so a new address and one already on the list look the same.
-  const { error } = await supabase.rpc("join_waitlist", {
-    p_email: email,
-    p_track: track,
-    p_source: source,
-    p_client_ip: ip,
-    p_route_secret: secret,
+  const result = await handleWaitlistRequest(req, {
+    rateLimited: (key) => rateLimited(key),
+    isConfigured: isSupabaseConfigured,
+    secret: routeSecret(process.env),
+    validateSignup,
+    joinWaitlist: async ({ email, track, source, ip: client, secret }) => {
+      const supabase = getSupabase();
+      if (!supabase) return { error: { code: "no_client" } };
+      // The only write path (forge-app migrations 0025/0026). It returns nothing
+      // either way, so a new address and one already on the list look the same.
+      return supabase.rpc("join_waitlist", {
+        p_email: email,
+        p_track: track,
+        p_source: source,
+        p_client_ip: client,
+        p_route_secret: secret,
+      });
+    },
+    logLocal: (info) => {
+      console.info("[waitlist] (local-only) signup:", { domain: info.domain, track: info.track, source: info.source });
+    },
+    logMissingSecret: () => {
+      // Fail closed: without the secret the database refuses every call anyway.
+      console.error("[waitlist] WAITLIST_ROUTE_SECRET is not set");
+    },
+    logJoinError: (code) => {
+      // 42501 (secret refused) and anything unexpected: log the code only. Never
+      // log the secret or the request body sent to Supabase.
+      console.error("[waitlist] join_waitlist failed:", { code });
+    },
   });
 
-  if (error) {
-    const outcome = rpcErrorOutcome(error);
-    // 42501 (secret refused) and anything unexpected: log the code only. Never
-    // log the secret or the request body sent to Supabase.
-    if (outcome.logCode) console.error("[waitlist] join_waitlist failed:", { code: outcome.logCode });
-    return NextResponse.json(outcome.body, { status: outcome.status });
+  if (result.location) {
+    return NextResponse.redirect(new URL(result.location, site.seo.url), 303);
   }
+  const response = NextResponse.json(result.body ?? ACCEPTED, { status: result.status });
+  if (result.headers) {
+    for (const [key, value] of Object.entries(result.headers)) {
+      response.headers.set(key, value);
+    }
+  }
+  return response;
+}
 
-  return NextResponse.json(ACCEPTED);
+/** GET must not sign anyone up (no body parsed, no insert). */
+export async function GET() {
+  return new NextResponse(null, { status: 405, headers: { Allow: "POST" } });
 }

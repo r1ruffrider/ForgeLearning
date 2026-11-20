@@ -20,7 +20,11 @@ Open <http://localhost:3000>.
 
 The page works **out of the box with no environment variables** — waitlist
 signups fall back to being logged by the `/api/waitlist` route (local-only
-mode), so you can develop the full flow offline.
+mode, no database required).
+
+Waitlist POSTs are accepted only from the exact site origin
+(`https://forgelearning.app`, from `site.seo.url`). Local and preview
+signups receive 403 by design.
 
 ---
 

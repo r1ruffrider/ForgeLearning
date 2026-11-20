@@ -1,8 +1,10 @@
+import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
 
 import { site } from "@/content/site";
 import { Logo } from "@/components/logo";
 import { Footer } from "@/components/sections/footer";
+import { fillLegalText } from "@/lib/legal-fill";
 
 type LegalDoc = {
   title: string;
@@ -10,9 +12,37 @@ type LegalDoc = {
   sections: ReadonlyArray<{ heading: string; body: ReadonlyArray<string> }>;
 };
 
-/** Substitute tokens ({contactEmail}) shared across legal copy. */
-function fill(text: string): string {
-  return text.replace(/\{contactEmail\}/g, site.brand.contactEmail);
+const legalLinkClass =
+  "font-medium text-forge-blue-soft underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
+function isOffSite(href: string): boolean {
+  try {
+    return new URL(href).origin !== new URL(site.seo.url).origin;
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Substitute {contactEmail}, then turn http(s) URLs into <a> nodes.
+ * Never uses dangerouslySetInnerHTML — parts are text or anchors.
+ */
+function fill(text: string): ReactNode {
+  return fillLegalText(text, site.brand.contactEmail).map((part, i) => {
+    if (part.type === "text") {
+      return <Fragment key={i}>{part.value}</Fragment>;
+    }
+    return (
+      <a
+        key={i}
+        href={part.href}
+        className={legalLinkClass}
+        {...(isOffSite(part.href) ? { rel: "noopener noreferrer" } : {})}
+      >
+        {part.value}
+      </a>
+    );
+  });
 }
 
 /**
@@ -34,7 +64,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         <div className="container flex h-16 items-center">
           <Link
             href="/"
-            className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex min-h-11 items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             aria-label={`${site.brand.name} — home`}
           >
             <Logo />
@@ -79,7 +109,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
           <div className="mt-14 border-t border-white/10 pt-8">
             <Link
               href="/"
-              className="text-sm font-medium text-forge-blue-soft underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex min-h-11 items-center text-sm font-medium text-forge-blue-soft underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forge-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               ← Back to Forge Learning
             </Link>

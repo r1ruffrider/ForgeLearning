@@ -7,6 +7,10 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { site } from "@/content/site";
 import { isValidEmail } from "@/lib/validation";
 import { cn } from "@/lib/utils";
+import {
+  waitlistNativeSelectProps,
+  waitlistRadixTrackProps,
+} from "@/lib/waitlist-track-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +41,11 @@ export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps)
   const [company, setCompany] = React.useState(""); // honeypot
   const [status, setStatus] = React.useState<Status>("idle");
   const [error, setError] = React.useState<string | null>(null);
+  const [hydrated, setHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   const emailId = `${idPrefix}-email`;
   const trackId = `${idPrefix}-track`;
@@ -96,7 +105,7 @@ export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps)
         aria-live="polite"
         initial={reduce ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.24, ease: "easeOut" }}
         className={cn(
           "glass flex flex-col items-center gap-3 rounded-2xl p-8 text-center",
           className
@@ -115,11 +124,17 @@ export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps)
 
   return (
     <form
+      method="post"
+      action="/api/waitlist"
       onSubmit={handleSubmit}
       noValidate
       className={cn("w-full", className)}
       aria-describedby={error ? errorId : undefined}
     >
+      <noscript>
+        <style>{`.waitlist-js-track{display:none!important}`}</style>
+      </noscript>
+      <input type="hidden" name="source" value={source} />
       <div className="flex flex-col gap-4">
         {/* Email */}
         <div className="flex flex-col gap-1.5 text-left">
@@ -144,27 +159,45 @@ export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps)
           />
         </div>
 
-        {/* Optional track */}
+        {/* Optional track: native select is in the DOM so no-JS and pre-hydration
+            POSTs keep the chosen track. The Radix trigger is hidden until hydrated
+            (and also hidden by a noscript style when JS is off), so only one field
+            is visible at a time. */}
         <div className="flex flex-col gap-1.5 text-left">
-          <Label htmlFor={trackId} className="flex items-center gap-2">
+          <Label htmlFor={trackId} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 leading-snug">
             {copy.trackLabel}
-            <span className="text-xs font-normal text-muted-foreground">
+            <span className="font-mono text-xs font-normal text-muted-foreground">
               ({copy.trackOptional})
             </span>
           </Label>
-          <Select value={track} onValueChange={setTrack}>
-            <SelectTrigger id={trackId} aria-label={copy.trackLabel}>
-              <SelectValue placeholder={copy.trackPlaceholder} />
-            </SelectTrigger>
-            <SelectContent>
-              {site.tracks.items.map((t) => (
-                <SelectItem key={t.name} value={t.name}>
-                  {t.name}
-                  {t.status === "first" ? "  ·  Available first" : ""}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div {...waitlistRadixTrackProps(hydrated)}>
+            <Select value={track} onValueChange={setTrack}>
+              <SelectTrigger id={hydrated ? trackId : `${idPrefix}-track-js`} aria-label={copy.trackLabel}>
+                <SelectValue placeholder={copy.trackPlaceholder} />
+              </SelectTrigger>
+              <SelectContent>
+                {site.tracks.items.map((t) => (
+                  <SelectItem key={t.name} value={t.name}>
+                    {t.name}
+                    {t.status === "first" ? "  ·  Available first" : ""}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <select
+            {...waitlistNativeSelectProps(hydrated, idPrefix)}
+            value={track}
+            onChange={(e) => setTrack(e.target.value)}
+          >
+            <option value="">{copy.trackPlaceholder}</option>
+            {site.tracks.items.map((t) => (
+              <option key={t.name} value={t.name}>
+                {t.name}
+                {t.status === "first" ? "  ·  Available first" : ""}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Honeypot — visually hidden, off-screen, not announced. */}

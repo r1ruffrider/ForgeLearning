@@ -5,7 +5,7 @@ import { LegalPage } from "@/components/legal-page";
 
 export const metadata: Metadata = {
   title: `${site.legal.privacy.title} — ${site.brand.name}`,
-  description: "How Forge Learning handles waitlist signups.",
+  description: "How Forge Learning handles waitlist signups on this site, and where to find the Forge Learning app's Privacy Policy.",
   robots: { index: true, follow: true },
 };
 
