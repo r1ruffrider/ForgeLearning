@@ -160,7 +160,8 @@ export async function handleWaitlistRequest(
   }
 
   if (!isAllowedRequestOrigin(req)) {
-    return { status: 403, body: FORBIDDEN };
+    // Form POSTs 303 to the static error page; JSON keeps 403. No insert.
+    return respond(req, 403, FORBIDDEN, "error");
   }
 
   if (!isFormRequest(req) && !isJsonContentType(req.headers.get("content-type"))) {

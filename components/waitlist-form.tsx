@@ -7,6 +7,10 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { site } from "@/content/site";
 import { isValidEmail } from "@/lib/validation";
 import { cn } from "@/lib/utils";
+import {
+  waitlistNativeSelectProps,
+  waitlistRadixTrackProps,
+} from "@/lib/waitlist-track-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -166,7 +170,7 @@ export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps)
               ({copy.trackOptional})
             </span>
           </Label>
-          <div className="waitlist-js-track" hidden={!hydrated} aria-hidden={!hydrated}>
+          <div {...waitlistRadixTrackProps(hydrated)}>
             <Select value={track} onValueChange={setTrack}>
               <SelectTrigger id={hydrated ? trackId : `${idPrefix}-track-js`} aria-label={copy.trackLabel}>
                 <SelectValue placeholder={copy.trackPlaceholder} />
@@ -182,14 +186,9 @@ export function WaitlistForm({ source, className, idPrefix }: WaitlistFormProps)
             </Select>
           </div>
           <select
-            id={hydrated ? `${idPrefix}-track-native` : trackId}
-            name="track"
+            {...waitlistNativeSelectProps(hydrated, idPrefix)}
             value={track}
             onChange={(e) => setTrack(e.target.value)}
-            hidden={hydrated}
-            aria-hidden={hydrated}
-            tabIndex={hydrated ? -1 : undefined}
-            className="flex h-12 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2 text-base text-foreground shadow-sm transition-[color,background-color,border-color,box-shadow] duration-200 ease-out"
           >
             <option value="">{copy.trackPlaceholder}</option>
             {site.tracks.items.map((t) => (
